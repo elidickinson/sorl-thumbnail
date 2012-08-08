@@ -39,6 +39,16 @@ def parse_geometry(geometry, ratio=None):
             y = toint(x / ratio)
     return x, y
 
+def parse_precrop(precrop):
+    """
+    Returns x1, y1, x2, y2 for cropping
+    """
+    def syntax_error():
+        raise ThumbnailParseError('Unrecognized precrop option: %s' % precrop)
+    coords = [int(x) for x in precrop.split(',')]
+    if len(coords) != 4:
+        syntax_error()
+    return ((coords[0],coords[1],),(coords[2],coords[3],))
 
 def parse_crop(crop, xy_image, xy_window):
     """

@@ -1,7 +1,7 @@
 #coding=utf-8
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
-from sorl.thumbnail.parsers import parse_crop
+from sorl.thumbnail.parsers import parse_crop, parse_precrop
 
 
 class EngineBase(object):
@@ -12,6 +12,7 @@ class EngineBase(object):
         """
         Processing conductor, returns the thumbnail as an image engine instance
         """
+        image = self.precrop(image, geometry, options)
         image = self.orientation(image, geometry, options)
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)
@@ -48,6 +49,18 @@ class EngineBase(object):
             height = toint(y_image * factor)
             image = self._scale(image, width, height)
         return image
+
+    def precrop(self, image, geometry, options):
+        precrop = options['precrop']
+        if not precrop or precrop == 'noop':
+            return image
+        coords = parse_precrop(precrop)
+        x = coords[0][0]
+        y = coords[0][1]
+        w = coords[1][0] - coords[0][0]
+        h = coords[1][1] - coords[0][1]
+        return self._crop(image,w,h,x,y)
+
 
     def crop(self, image, geometry, options):
         """
