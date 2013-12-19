@@ -101,7 +101,7 @@ class KVStoreBase(object):
                 thumbnail_keys = list(thumbnail_keys_set)
                 if thumbnail_keys:
                     self._set(key, thumbnail_keys, identity='thumbnails')
-                    return
+                    continue
             # if there is no image_file then this thumbnails key is just
             # hangin' loose, If the thumbnail_keys ended up empty there is no
             # reason for keeping it either
